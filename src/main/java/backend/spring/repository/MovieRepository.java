@@ -1,7 +1,8 @@
 package backend.spring.repository;
 
-import backend.spring.domain.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import backend.spring.entity.Movie;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
