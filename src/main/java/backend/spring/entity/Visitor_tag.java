@@ -5,48 +5,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "movies")
+@Table(name = "visitor_tag")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Movie {
+public class Visitor_tag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "movie_id", nullable = false)
+	@Column(name = "tag_id")
 	private Long id;
 
-	@Column(nullable = false)
-	private String title;
+	@OneToOne
+	@JoinColumn(name = "visitor_id", nullable = false)
+	private Visitor visitor;
 
 	@Column(nullable = false)
-	private String hour;
+	private String emotion;
 
 	@Column(nullable = false)
-	private String year;
-
-	@Column(nullable = false)
-	private String image;
-
-	@Column(columnDefinition = "TEXT", nullable = false)
-	private String summary;
-
-	@Column(nullable = false)
-	private Integer score;
-
-	@Column(nullable = false)
-	private String director;
-
-	@Column(nullable = false)
-	private String actor1;
-
-	@Column(nullable = false)
-	private String actor2;
+	private String style;
 
 	@Column(nullable = false)
 	private String genre;
@@ -55,8 +40,6 @@ public class Movie {
 	private String origin;
 
 	@Column(nullable = false)
-	private String emotion;
+	private String hate;
 
-	@Column(nullable = false)
-	private String style;
 }
