@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "visitor_tag")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Visitor_tag {
+public class VisitorTag {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
