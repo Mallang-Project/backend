@@ -42,4 +42,9 @@ public class Visitor {
 		this.score = null;
 		this.review = null;
 	}
+
+	public void setReview(Integer score, String review) {
+		this.score = score;
+		this.review = review;
+	}
 }
