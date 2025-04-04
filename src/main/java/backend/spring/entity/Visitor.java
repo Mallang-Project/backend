@@ -28,7 +28,7 @@ public class Visitor {
 	@Column(nullable = false)
 	private String nickname;
 
-	private Integer score;
+	private double score;
 
 	@Column(length = 200)
 	private String review;
