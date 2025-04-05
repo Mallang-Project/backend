@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminService {
 
-	private VisitorRepository visitorRepository;
+	private final VisitorRepository visitorRepository;
 
 	public ResponseEntity<? super CountVisitorResponseDto> getVisitorsCount(){
 		try{
