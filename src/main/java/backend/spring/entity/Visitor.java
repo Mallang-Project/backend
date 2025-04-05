@@ -36,4 +36,15 @@ public class Visitor {
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
+
+	public Visitor(String nickname) {
+		this.nickname = nickname;
+		this.score = null;
+		this.review = null;
+	}
+
+	public void setReview(Integer score, String review) {
+		this.score = score;
+		this.review = review;
+	}
 }

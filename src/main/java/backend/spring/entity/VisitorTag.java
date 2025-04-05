@@ -42,4 +42,12 @@ public class VisitorTag {
 	@Column(nullable = false)
 	private String hate;
 
+	public VisitorTag(Visitor visitor, String emotion, String style, String genre, String origin, String hate) {
+		this.visitor = visitor;
+		this.emotion = emotion;
+		this.style = style;
+		this.genre = genre;
+		this.origin = origin;
+		this.hate = hate;
+	}
 }
