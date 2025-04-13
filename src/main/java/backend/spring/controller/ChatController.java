@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/chatbot")
+@RequestMapping("/api/mental")
 @RequiredArgsConstructor
 public class ChatController {
 

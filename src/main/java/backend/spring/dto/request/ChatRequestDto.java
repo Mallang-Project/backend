@@ -1,11 +1,14 @@
 package backend.spring.dto.request;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import backend.spring.dto.object.Message;
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class ChatRequestDto {
-	private List<Message> messages;
+	private String emotion;
+	private String style;
+	private String tone;
 }
