@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class OpenAiService {
 		this.todayWordRepository = todayWordRepository;
 	}
 
+	@Transactional
 	public Mono<ResponseEntity<? extends ResponseDto>> getChatCompletionAsync(ChatRequestDto request) {
 		// 프론트에서 메시지 누락 or null이면 오류
 		String emotion = request.getEmotion();
@@ -70,7 +72,7 @@ public class OpenAiService {
 			+ "3. 영화 추천 방향 안내 (어떤 스타일의 영화를 보면 좋을지 한 줄)\n"
 			+ "4. 한 마디 응원 (사용자 톤에 맞는 문장 1줄)\n"
 			+ "\n"
-			+ "형식은 부드럽고 친근한 말투로 작성해주세요.\n"
+			+ "형식은 부드럽고 친근한 말투로 작성해주시고 문장마다 줄바꿈 없이 자연스럽게 이어 써주세요.\n"
 			+ "\n"
 			+ "전체 길이는 300자 이내로 제한해주세요.";
 
@@ -100,14 +102,16 @@ public class OpenAiService {
 			.bodyValue(requestPayload) //model+message 같이 보냄
 			.retrieve()  // 응답 받기 준비
 			.bodyToMono(Map.class) //응답(json)을 Mono<Map>으로 변환
-			.map(response -> {
+			.flatMap(response -> { //gpt에게 응답(response) 받아 저장
 				try {
 					Map choice = (Map)((List)response.get("choices")).get(0);
 					Map message = (Map)choice.get("message");
 					String content = (String)message.get("content");
-					return ChatResponseDto.success(content);
+
+					todayWordRepository.save(new TodayWord(emotion, style, tone, content));
+					return Mono.just(ChatResponseDto.success(content));
 				} catch (Exception e) {
-					return ChatResponseDto.invalid_format();
+					return Mono.just(ChatResponseDto.invalid_format());
 				}
 			})
 			.onErrorResume(WebClientResponseException.TooManyRequests.class, e -> {
