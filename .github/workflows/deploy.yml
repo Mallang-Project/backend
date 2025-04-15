@@ -1,0 +1,55 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest 
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Corretto)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+
+      - name: Grant permission to gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      - name: SCP files to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "build/libs/spring-0.0.1-SNAPSHOT.jar"
+          target: "/home/ec2-user"
+
+      - name: Deploy & Restart application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
+            if [ ! -z "$PID" ]; then
+              kill -9 $PID
+            fi
+            
+            nohup java \아
+            -DDB_URL=${{ secrets.DB_URL }} \
+            -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -DAPI_KEY=${{ secrets.API_KEY }} \
+            -DADMIN_CODE=${{ secrets.ADMIN_CODE }} \
+            -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
