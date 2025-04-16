@@ -50,17 +50,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           
           script: |
-             PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
-             if [ ! -z "$PID" ]; then
-               kill -9 $PID
-             fi
-             
-             nohup java \
-             -Xms128m \
-             -Xmx256m \    
-             -DDB_URL=$DB_URL \
-             -DDB_USERNAME=$DB_USERNAME \
-             -DDB_PASSWORD=$DB_PASSWORD \
-             -DAPI_KEY=$API_KEY \
-             -DADMIN_CODE=$ADMIN_CODE \
-             -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+             /home/ec2-user/run.sh
