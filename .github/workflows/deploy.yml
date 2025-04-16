@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -46,7 +47,9 @@ jobs:
               kill -9 $PID
             fi
             
-            nohup java \아
+            nohup java \
+            -Xms128m \
+            -Xmx256m \    
             -DDB_URL=${{ secrets.DB_URL }} \
             -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
             -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
