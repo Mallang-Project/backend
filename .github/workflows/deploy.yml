@@ -42,10 +42,12 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "process kill" 
             PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
             if [ ! -z "$PID" ]; then
               kill -9 $PID
             fi
-            
+
+            echo "run java"
             nohup java -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
 
