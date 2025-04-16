@@ -42,6 +42,13 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "시크릿 환경 변수 확인"
+            echo " - DB_URL is set? -> ${DB_URL:+YES}"
+            echo " - DB_USERNAME is set? -> ${DB_USERNAME:+YES}"
+            echo " - DB_PASSWORD is set? -> ${DB_PASSWORD:+YES}"
+            echo " - ADMIN_CODE is set? -> ${ADMIN_CODE:+YES}"
+            echo " - API_KEY is set? -> ${API_KEY:+YES}"
+
             PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
             if [ ! -z "$PID" ]; then
               kill -9 $PID
