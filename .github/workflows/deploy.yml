@@ -47,13 +47,5 @@ jobs:
               kill -9 $PID
             fi
             
-            nohup java \
-            -Xms128m \
-            -Xmx256m \    
-            -DDB_URL=${{ secrets.DB_URL }} \
-            -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
-            -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -DAPI_KEY=${{ secrets.API_KEY }} \
-            -DADMIN_CODE=${{ secrets.ADMIN_CODE }} 
-            -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+            nohup java -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
 
