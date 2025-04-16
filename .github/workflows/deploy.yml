@@ -46,7 +46,7 @@ jobs:
               kill -9 $PID
             fi
             
-            nohup java \아
+            nohup java \
             -DDB_URL=${{ secrets.DB_URL }} \
             -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
             -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
