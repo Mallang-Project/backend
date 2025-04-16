@@ -54,5 +54,6 @@ jobs:
             -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
             -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -DAPI_KEY=${{ secrets.API_KEY }} \
-            -DADMIN_CODE=${{ secrets.ADMIN_CODE }} \
-            -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+            -DADMIN_CODE=${{ secrets.ADMIN_CODE }} 
+            -jar /home/ec2-user/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
+
