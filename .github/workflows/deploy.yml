@@ -6,13 +6,6 @@ on:
       - main
   workflow_dispatch:
   
-env:
-  DB_URL : ${{ secrets.DB_URL }}
-  DB_USERNAME : ${{ secrets.DB_USERNAME }}
-  DB_PASSWORD : ${{ secrets.DB_PASSWORD }}
-  API_KEY : ${{ secrets.API_KEY }}
-  ADMIN_CODE : ${{ secrets.ADMIN_CODE }}
-  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -50,4 +43,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           
           script: |
-             /home/ec2-user/run.sh
+           PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
+           if [ ! -z "$PID" ]; then
+             kill -9 $PID
+           fi
+           export DB_URL=${{ secrets.DB_URL }}
+           export DB_USERNAME=${{ secrets.DB_USERNAME }}
+           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+           nohup java -jar /home/ec2-user/spring-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
