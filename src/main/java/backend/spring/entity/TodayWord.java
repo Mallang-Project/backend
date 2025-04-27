@@ -32,4 +32,11 @@ public class TodayWord {
 
 	@Column(columnDefinition = "TEXT", nullable = false)
 	private String word;
+
+	public TodayWord(String emotion, String style, String tone, String word) {
+		this.emotion = emotion;
+		this.style = style;
+		this.tone = tone;
+		this.word = word;
+	}
 }
