@@ -15,15 +15,19 @@ public class MovieInfoService {
 
 	private final MovieRepository movieRepository;
 
+	private final String imageBaseUrl = "http://3.39.83.134:8080/images/";
+
 	public MovieInfoResponseDto getMovieIntfo(Long movieId) {
 		Movie movie = movieRepository.findById(movieId)
 			.orElseThrow(() -> new CustomException(ResponseCode.MOVIE_NOT_FOUND));
+
+		String fullImageUrl = imageBaseUrl + movie.getImage();
 
 		return new MovieInfoResponseDto(
 			movie.getTitle(),
 			movie.getHour(),
 			movie.getYear(),
-			movie.getImage(),
+			fullImageUrl,
 			movie.getGenre(),
 			movie.getSummary(),
 			movie.getScore(),
