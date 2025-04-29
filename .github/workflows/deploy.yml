@@ -5,7 +5,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -41,19 +41,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
+          
           script: |
-            PID=$(pgrep -f 'spring-0.0.1-SNAPSHOT.jar')
-            if [ ! -z "$PID" ]; then
-              kill -9 $PID
-            fi
-            
-            nohup java \
-            -Xms128m \
-            -Xmx256m \    
-            -DDB_URL=${{ secrets.DB_URL }} \
-            -DDB_USERNAME=${{ secrets.DB_USERNAME }} \
-            -DDB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -DAPI_KEY=${{ secrets.API_KEY }} \
-            -DADMIN_CODE=${{ secrets.ADMIN_CODE }} 
-            -jar /home/ec2-user/build/libs/spring-0.0.1-SNAPSHOT.jar > output.log 2>&1 &
-
+             /home/ec2-user/run.sh
