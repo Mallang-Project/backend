@@ -14,7 +14,7 @@ public class WebConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/api/**")
-					.allowedOriginPatterns("https://fronted-ebon.vercel.app")
+					.allowedOrigins("https://fronted-ebon.vercel.app")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowedHeaders("*")
 					.allowCredentials(false);
