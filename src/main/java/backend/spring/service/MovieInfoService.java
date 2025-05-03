@@ -15,7 +15,7 @@ public class MovieInfoService {
 
 	private final MovieRepository movieRepository;
 
-	private final String imageBaseUrl = "http://3.39.83.134:8080/images/";
+	private final String imageBaseUrl = "https://mallang.info/images/";
 
 	public MovieInfoResponseDto getMovieIntfo(Long movieId) {
 		Movie movie = movieRepository.findById(movieId)
