@@ -28,6 +28,8 @@ public class RecommendService {
 	private final MovieRepository movieRepository;
 	private final VisitorTagRepository visitorTagRepository;
 
+	private final String imageBaseUrl = "http://3.39.83.134:8080/images/";
+
 	public List<RecommendMovieResponseDto> recommendMovies(Long visitorId, RecommendRequest request) {
 		Visitor visitor = visitorRepository.findById(visitorId)
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
@@ -77,13 +79,14 @@ public class RecommendService {
 		);
 		visitorTagRepository.save(tag);
 
+
 		return recommended.stream()
 			.map(movie -> new RecommendMovieResponseDto(
 				movie.getId(),
 				movie.getTitle(),
 				movie.getHour(),
 				movie.getYear(),
-				movie.getImage()
+				imageBaseUrl + movie.getImage()
 			))
 			.toList();
 	}
