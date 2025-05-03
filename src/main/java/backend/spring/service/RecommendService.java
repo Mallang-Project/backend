@@ -79,6 +79,7 @@ public class RecommendService {
 
 		return recommended.stream()
 			.map(movie -> new RecommendMovieResponseDto(
+				movie.getId(),
 				movie.getTitle(),
 				movie.getHour(),
 				movie.getYear(),
