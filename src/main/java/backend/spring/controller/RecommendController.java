@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import backend.spring.dto.request.MovieInfoequestDto;
 import backend.spring.dto.request.RecommendRequest;
 import backend.spring.dto.response.MovieInfoResponseDto;
 import backend.spring.dto.response.RecommendMovieResponseDto;
@@ -35,9 +34,7 @@ public class RecommendController {
 	}
 
 	@PostMapping("/info/{movieId}")
-	public ResponseEntity<MovieInfoResponseDto> getMovieInfo(
-		@PathVariable Long movieId,
-		@RequestBody MovieInfoequestDto request) {
+	public ResponseEntity<MovieInfoResponseDto> getMovieInfo(@PathVariable Long movieId) {
 
 		MovieInfoResponseDto response = movieInfoService.getMovieIntfo(movieId);
 		return ResponseEntity.ok(response);
