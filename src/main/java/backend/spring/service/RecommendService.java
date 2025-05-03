@@ -28,7 +28,7 @@ public class RecommendService {
 	private final MovieRepository movieRepository;
 	private final VisitorTagRepository visitorTagRepository;
 
-	private final String imageBaseUrl = "http://3.39.83.134:8080/images/";
+	private final String imageBaseUrl = "https://mallang.info/images/";
 
 	public List<RecommendMovieResponseDto> recommendMovies(Long visitorId, RecommendRequest request) {
 		Visitor visitor = visitorRepository.findById(visitorId)
