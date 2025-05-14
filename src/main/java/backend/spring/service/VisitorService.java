@@ -22,6 +22,10 @@ public class VisitorService {
 		String nickname = requestDto.nickname();
 		boolean isAdminViewable = adminCode.equals(nickname);
 
+		if(isAdminViewable){
+			return new VisitorResponseDto(-1L, nickname, isAdminViewable);
+		}
+
 		Visitor visitor = new Visitor(nickname);
 		visitorRepository.save(visitor);
 
