@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import backend.spring.dto.request.ChatRequestDto;
+import backend.spring.dto.response.ChatResponseDto;
+import backend.spring.exception.CustomException;
+import backend.spring.exception.ResponseCode;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import backend.spring.dto.request.ChatRequestDto;
-import backend.spring.dto.response.ChatResponseDto;
-import backend.spring.dto.response.ResponseDto;
 import backend.spring.entity.TodayWord;
 import backend.spring.repository.TodayWordRepository;
 import reactor.core.publisher.Mono;
@@ -33,48 +32,32 @@ public class OpenAiService {
 	}
 
 	@Transactional
-	public Mono<ResponseEntity<? extends ResponseDto>> getChatCompletionAsync(ChatRequestDto request) {
-		// 프론트에서 메시지 누락 or null이면 오류
-		String emotion = request.getEmotion();
-		String style = request.getStyle();
-		String tone = request.getTone();
-		if (!StringUtils.hasText(emotion) || !StringUtils.hasText(style) || !StringUtils.hasText(tone)) {
-			return Mono.just(ChatResponseDto.invalid_format());
-		} //Mono를 씌워서 리턴함
+	public Mono<ChatResponseDto> getChatCompletionAsync(ChatRequestDto request) {
 
-		try{
-			//존재하는지 확인
-			Optional<TodayWord> todayWord = todayWordRepository.findByEmotionAndStyleAndTone(emotion, style, tone);
-			if (todayWord.isPresent()) {
-				String word = todayWord.get().getWord();
-				return Mono.just(ChatResponseDto.success(word));
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-			return Mono.just(ResponseDto.databaseError());
+		String emotion = request.emotion();
+		String style = request.style();
+		String tone = request.tone();
+
+		//db에 해당 조합이 존재하는지 확인
+		Optional<TodayWord> todayWord = todayWordRepository.findByEmotionAndStyleAndTone(emotion, style, tone);
+		if (todayWord.isPresent()) {
+			String word = todayWord.get().getWord();
+			return Mono.just(new ChatResponseDto(word));
 		}
 
 		// 0. 사용자 태그 가져와 스크립트에 추가
-		String script = "당신은 감정 기반 영화 추천 사이트에서 감정 분석 결과를 요약해주는 작가입니다.\n"
-			+ "\n"
-			+ "사용자 정보:\n"
-			+ "\n"
-			+ "- 현재 감정: "+emotion+"\n"
-			+ "- 감정 해소 방식: "+style+"\n"
-			+ "- 듣고 싶은 말의 톤: 위로"+tone+"\n"
-			+ "\n"
-			+ "다음 조건에 따라 결과지를 작성해주세요:\n"
-			+ "\n"
-			+ "[결과지 구성]\n"
-			+ "\n"
-			+ "1. 감정 요약 (현재 감정에 공감해주는 문장 1~2줄)\n"
-			+ "2. 사용자 성향 피드백 (해소 방식에 대한 긍정적 리액션)\n"
-			+ "3. 영화 추천 방향 안내 (어떤 스타일의 영화를 보면 좋을지 한 줄)\n"
-			+ "4. 한 마디 응원 (사용자 톤에 맞는 문장 1줄)\n"
-			+ "\n"
-			+ "형식은 부드럽고 친근한 말투로 작성해주시고 문장마다 줄바꿈 없이 자연스럽게 이어 써주세요.\n"
-			+ "\n"
-			+ "전체 길이는 300자 이내로 제한해주세요.";
+		String script =
+				"너는 심리 상담 전문가이며, 감정적으로 지친 사람들에게 공감 어린 말과 위로를 해주는 역할을 하고 있어. "
+				+ "말투는 따뜻하고 조용하며, 강요하지 않도록 유의해. 문장은 하나의 단락으로 이어서 써야 하며, 절대 줄바꿈을 하지 마. '\\n' 문자도 쓰지 마. "
+				+ "결과는 하나의 자연스러운 문장 흐름으로, 문단이 끊기지 않도록 써줘. 항목을 구분하지 말고 연결해서 문단 하나로 써줘. "
+				+ "예시: '지루한 하루 속에서도 당신이 새로운 기분 전환을 시도하려는 모습이 참 멋져요. 이런 태도는 일상에 작은 활력을 불어넣을 수 있어요. 오늘 하루도 당신은 충분히 잘해내고 있어요.' 이런 식으로, 구조가 드러나지 않도록 써줘."
+				+ "\n"
+				+ "사용자 정보:\n"
+				+ "- 감정 상태: " + emotion + "\n"
+				+ "- 감정 해소 방식: " + style + "\n"
+				+ "- 듣고 싶은 말의 톤: " + tone + "\n"
+				+ "\n"
+				+ "이 정보를 바탕으로 한 문단의 감성적인 문장을 작성해주세요. 문장은 하나로 이어지며, 영화에 대한 언급도 자연스럽게 포함시켜 주세요. 500자 이내로 써주세요.";
 
 		// 1. 메시지 리스트 구성
 		List<Map<String, String>> messages = new ArrayList<>();
@@ -103,25 +86,18 @@ public class OpenAiService {
 			.retrieve()  // 응답 받기 준비
 			.bodyToMono(Map.class) //응답(json)을 Mono<Map>으로 변환
 			.flatMap(response -> { //gpt에게 응답(response) 받아 저장
-				try {
-					Map choice = (Map)((List)response.get("choices")).get(0);
-					Map message = (Map)choice.get("message");
-					String content = (String)message.get("content");
+				Map choice = (Map)((List)response.get("choices")).get(0);
+				Map message = (Map)choice.get("message");
+				String content = (String)message.get("content");
 
-					todayWordRepository.save(new TodayWord(emotion, style, tone, content));
-					return Mono.just(ChatResponseDto.success(content));
-				} catch (Exception e) {
-					return Mono.just(ChatResponseDto.invalid_format());
-				}
+				todayWordRepository.save(new TodayWord(emotion, style, tone, content));
+				return Mono.just(new ChatResponseDto(content));
 			})
 			.onErrorResume(WebClientResponseException.TooManyRequests.class, e -> {
-				return Mono.just(ChatResponseDto.openai_limit()); //gpt 제한 초과
+				return Mono.error(new CustomException(ResponseCode.OPENAI_LIMIT)); //gpt 제한 초과
 			})
 			.onErrorResume(WebClientResponseException.class, e -> {
-				return Mono.just(ChatResponseDto.invalid_format());
-			})
-			.onErrorResume(Exception.class, e -> { //기타 예상하지 못한 모든 예외 처리
-				return Mono.just(ResponseDto.databaseError());
-			}); //NullPointerException, JSON 구조 변경 등
+				return Mono.error(new CustomException(ResponseCode.INVALID_FORMAT)); // 나머지 모든 4xx, 5xx 오류: 일반적인 GPT 오류 처리
+			});
 	}
 }
