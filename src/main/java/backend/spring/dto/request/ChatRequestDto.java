@@ -1,13 +1,10 @@
 package backend.spring.dto.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
 
-@Getter
-@NoArgsConstructor
-public class ChatRequestDto {
-	private String emotion;
-	private String style;
-	private String tone;
+public record ChatRequestDto(
+        @NotBlank String emotion,
+        @NotBlank String style,
+        @NotBlank String tone
+) {
 }
