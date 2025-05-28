@@ -3,11 +3,9 @@ package backend.spring.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+import backend.spring.dto.response.CountVisitorResponseDto;
 import org.springframework.stereotype.Service;
 
-import backend.spring.dto.response.CountVisitorResponseDto;
-import backend.spring.dto.response.ResponseDto;
 import backend.spring.entity.Visitor;
 import backend.spring.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +16,17 @@ public class AdminService {
 
 	private final VisitorRepository visitorRepository;
 
-	public ResponseEntity<? super CountVisitorResponseDto> getVisitorsCount(){
-		try{
-			List<Visitor> visitorList = visitorRepository.findAll();
-			int totalCount = visitorList.size();
+	public CountVisitorResponseDto getVisitorsCount(){
 
-			LocalDate today = LocalDate.now();
-			int todayCount = (int) visitorList.stream()
-				.filter(visitor -> visitor.getCreatedAt().toLocalDate().equals(today))
-				.count();
+		List<Visitor> visitorList = visitorRepository.findAll();
+		int totalCount = visitorList.size();
 
-			return CountVisitorResponseDto.success(totalCount, todayCount);
-		} catch(Exception e){
-			e.printStackTrace();
-			return ResponseDto.databaseError();
-		}
+		LocalDate today = LocalDate.now();
+		int todayCount = (int) visitorList.stream()
+			.filter(visitor -> visitor.getCreatedAt().toLocalDate().equals(today))
+			.count();
+
+		return new CountVisitorResponseDto(totalCount, todayCount);
+
 	}
 }

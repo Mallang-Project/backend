@@ -1,11 +1,11 @@
 package backend.spring.controller;
 
+import backend.spring.dto.response.CountVisitorResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import backend.spring.dto.response.CountVisitorResponseDto;
 import backend.spring.service.AdminService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,8 +17,9 @@ public class AdminController {
 	private final AdminService adminService;
 
 	@GetMapping("/visitors/count")
-	public ResponseEntity<? super CountVisitorResponseDto> getVisitorsCount() {
-		return adminService.getVisitorsCount();
+	public ResponseEntity<CountVisitorResponseDto> getVisitorsCount() {
+		CountVisitorResponseDto result = adminService.getVisitorsCount();
+		return ResponseEntity.ok(result);
 	}
 
 }
