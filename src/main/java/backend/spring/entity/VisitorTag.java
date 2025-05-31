@@ -1,7 +1,13 @@
 package backend.spring.entity;
 
+import backend.spring.entity.type.Emotion;
+import backend.spring.entity.type.Genre;
+import backend.spring.entity.type.Origin;
+import backend.spring.entity.type.Style;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,22 +33,27 @@ public class VisitorTag {
 	@JoinColumn(name = "visitor_id", nullable = false)
 	private Visitor visitor;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String emotion;
+	private Emotion emotion;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String style;
+	private Style style;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String genre;
+	private Genre genre;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String origin;
+	private Origin origin;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String hate;
+	private Genre hate;
 
-	public VisitorTag(Visitor visitor, String emotion, String style, String genre, String origin, String hate) {
+	public VisitorTag(Visitor visitor, Emotion emotion, Style style, Genre genre, Origin origin, Genre hate) {
 		this.visitor = visitor;
 		this.emotion = emotion;
 		this.style = style;
