@@ -13,6 +13,10 @@ import backend.spring.dto.response.RecommendMovieResponseDto;
 import backend.spring.entity.Movie;
 import backend.spring.entity.Visitor;
 import backend.spring.entity.VisitorTag;
+import backend.spring.entity.type.Emotion;
+import backend.spring.entity.type.Genre;
+import backend.spring.entity.type.Origin;
+import backend.spring.entity.type.Style;
 import backend.spring.exception.CustomException;
 import backend.spring.exception.ResponseCode;
 import backend.spring.repository.MovieRepository;
@@ -69,16 +73,15 @@ public class RecommendService {
 			.limit(3)
 			.toList();
 
-		VisitorTag tag = new VisitorTag(
+
+		visitorTagRepository.save(VisitorTag.of(
 			visitor,
 			request.emotion(),
 			request.style(),
 			request.genre(),
 			request.origin(),
 			request.hate()
-		);
-		visitorTagRepository.save(tag);
-
+		));
 
 		return recommended.stream()
 			.map(movie -> new RecommendMovieResponseDto(

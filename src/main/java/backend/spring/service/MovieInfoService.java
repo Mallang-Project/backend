@@ -28,13 +28,13 @@ public class MovieInfoService {
 			movie.getHour(),
 			movie.getYear(),
 			fullImageUrl,
-			movie.getGenre(),
+			movie.getGenre().getName(),
 			movie.getSummary(),
 			movie.getScore(),
 			movie.getDirector(),
 			movie.getActor1(),
 			movie.getActor2(),
-			movie.getOrigin()
+			movie.getOrigin().getName()
 		);
 	}
 }
