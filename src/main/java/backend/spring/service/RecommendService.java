@@ -73,16 +73,15 @@ public class RecommendService {
 			.limit(3)
 			.toList();
 
-		VisitorTag tag = new VisitorTag(
-			visitor,
-			Emotion.from(request.emotion()),
-			Style.from(request.style()),
-			Genre.from(request.genre()),
-			Origin.from(request.origin()),
-			Genre.from(request.hate())
-		);
-		visitorTagRepository.save(tag);
 
+		visitorTagRepository.save(VisitorTag.of(
+			visitor,
+			request.emotion(),
+			request.style(),
+			request.genre(),
+			request.origin(),
+			request.hate()
+		));
 
 		return recommended.stream()
 			.map(movie -> new RecommendMovieResponseDto(

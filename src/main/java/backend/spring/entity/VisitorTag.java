@@ -61,4 +61,16 @@ public class VisitorTag {
 		this.origin = origin;
 		this.hate = hate;
 	}
+
+	public static VisitorTag of(Visitor visitor, String emotion, String style, String genre, String origin,
+		String hate) {
+		return new VisitorTag(
+			visitor,
+			Emotion.from(emotion),
+			Style.from(style),
+			Genre.from(genre),
+			Origin.from(origin),
+			Genre.from(genre)
+		);
+	}
 }
