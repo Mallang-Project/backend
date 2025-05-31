@@ -90,7 +90,7 @@ public class OpenAiService {
 				Map message = (Map)choice.get("message");
 				String content = (String)message.get("content");
 
-				todayWordRepository.save(new TodayWord(emotion, style, tone, content));
+				todayWordRepository.save(TodayWord.of(emotion, style, tone, content));
 				return Mono.just(new ChatResponseDto(content));
 			})
 			.onErrorResume(WebClientResponseException.TooManyRequests.class, e -> {
