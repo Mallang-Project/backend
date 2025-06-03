@@ -1,10 +1,7 @@
 package backend.spring.service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -13,10 +10,6 @@ import backend.spring.dto.response.RecommendMovieResponseDto;
 import backend.spring.entity.Movie;
 import backend.spring.entity.Visitor;
 import backend.spring.entity.VisitorTag;
-import backend.spring.entity.type.Emotion;
-import backend.spring.entity.type.Genre;
-import backend.spring.entity.type.Origin;
-import backend.spring.entity.type.Style;
 import backend.spring.exception.CustomException;
 import backend.spring.exception.ResponseCode;
 import backend.spring.repository.MovieRepository;
@@ -38,8 +31,6 @@ public class RecommendService {
 		Visitor visitor = visitorRepository.findById(visitorId)
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
-		List<Movie> allMovies = movieRepository.findAllByGenreNot(request.hate());
-
 		Set<String> tags = Set.of(
 			request.emotion(),
 			request.style(),
@@ -47,32 +38,10 @@ public class RecommendService {
 			request.origin()
 		);
 
-		Map<Movie, Long> matchCountMap = allMovies.stream()
-			.collect(Collectors.toMap(
-				movie -> movie,
-				movie -> tags.stream()
-					.filter(tag -> tag.equals(movie.getEmotion())
-						|| tag.equals(movie.getStyle())
-						|| tag.equals(movie.getGenre())
-						|| tag.equals(movie.getOrigin()))
-					.count()
-			));
-
-		List<Movie> matchMovies = matchCountMap.entrySet().stream()
-			.filter(entry -> entry.getValue() > 0)
-			.sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
-			.map(Map.Entry::getKey)
-			.collect(Collectors.toList());
-
-		if (matchMovies.isEmpty()) {
+		List<Movie> recommended = movieRepository.findRecommendedMovies(tags, request.hate());
+		if (recommended.isEmpty()) {
 			throw new CustomException(ResponseCode.NO_RECOMMENDATION_FOUND);
 		}
-
-		Collections.shuffle(matchMovies);
-		List<Movie> recommended = matchMovies.stream()
-			.limit(3)
-			.toList();
-
 
 		visitorTagRepository.save(VisitorTag.of(
 			visitor,
