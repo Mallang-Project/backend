@@ -33,8 +33,7 @@ public class MovieInfoService {
 			movie.getScore(),
 			movie.getDirector(),
 			movie.getActor1(),
-			movie.getActor2(),
-			movie.getOrigin().getName()
+			movie.getActor2()
 		);
 	}
 }

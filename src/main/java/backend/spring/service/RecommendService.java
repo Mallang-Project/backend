@@ -34,8 +34,7 @@ public class RecommendService {
 		Set<String> tags = Set.of(
 			request.emotion(),
 			request.style(),
-			request.genre(),
-			request.origin()
+			request.genre()
 		);
 
 		List<Movie> recommended = movieRepository.findRecommendedMovies(tags, request.hate());
@@ -48,7 +47,6 @@ public class RecommendService {
 			request.emotion(),
 			request.style(),
 			request.genre(),
-			request.origin(),
 			request.hate()
 		));
 
