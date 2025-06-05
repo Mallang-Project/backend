@@ -2,7 +2,6 @@ package backend.spring.entity;
 
 import backend.spring.entity.type.Emotion;
 import backend.spring.entity.type.Genre;
-import backend.spring.entity.type.Origin;
 import backend.spring.entity.type.Style;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,10 +56,6 @@ public class Movie {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Genre genre;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Origin origin;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)

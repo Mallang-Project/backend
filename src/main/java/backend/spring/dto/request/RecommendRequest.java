@@ -6,7 +6,6 @@ public record RecommendRequest(
 	@NotBlank String emotion,
 	@NotBlank String style,
 	@NotBlank String genre,
-	@NotBlank String origin,
 	@NotBlank String hate
 ) {
 }

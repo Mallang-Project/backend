@@ -10,7 +10,6 @@ public record MovieInfoResponseDto(
 	Double score,
 	String director,
 	String actor1,
-	String actor2,
-	String origin
+	String actor2
 ) {
 }

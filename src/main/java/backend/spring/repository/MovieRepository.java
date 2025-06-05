@@ -13,14 +13,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 	@Query(value = "SELECT * FROM (" +
 		"SELECT *, " +
-		"( (CASE WHEN emotion IN :tags THEN 1 ELSE 0 END) + " +
-		"  (CASE WHEN style IN :tags THEN 1 ELSE 0 END) + " +
+		"( (CASE WHEN emotion IN :tags THEN 2 ELSE 0 END) + " +
+		"  (CASE WHEN style IN :tags THEN 2 ELSE 0 END) + " +
 		"  (CASE WHEN genre IN :tags THEN 1 ELSE 0 END) + " +
-		"  (CASE WHEN origin IN :tags THEN 1 ELSE 0 END) " +
 		") AS match_count " +
 		"FROM movies " +
 		"WHERE genre <> :hate " +
-		"AND (emotion IN :tags OR style IN :tags OR genre IN :tags OR origin IN :tags) " +
+		"AND (emotion IN :tags OR style IN :tags OR genre IN :tags) " +
 		") AS temp " +
 		"ORDER BY match_count DESC, RAND() " +
 		"LIMIT 3", nativeQuery = true)
