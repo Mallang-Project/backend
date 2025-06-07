@@ -22,8 +22,8 @@ logging:
     org.springframework.web.socket: debug
 
 openai:
-  api-key: ${API_KEY}
-  api-url: https://api.openai.com/v1/chat/completions
+  api-key: ${AI_API_KEY}
+  api-url: ${AI_API_URL}
 
 tmdb:
   api-key: ${TM_API_KEY}
