@@ -24,3 +24,7 @@ logging:
 openai:
   api-key: ${API_KEY}
   api-url: https://api.openai.com/v1/chat/completions
+
+tmdb:
+  api-key: ${TM_API_KEY}
+  api-url: ${TM_API_URL}
