@@ -9,7 +9,9 @@ public enum ResponseCode {
 	NO_RECOMMENDATION_FOUND(404, "조건에 맞는 영화가 없습니다."),
 	INVALID_FORMAT(400, "잘못된 입력 형식 입니다."),
 	OPENAI_LIMIT(400, "gpt api의 사용량을 초과했습니다."),
-	INVALID_ENUM_FORMAT(400, "잘못된 입력 형식입니다.");
+	INVALID_ENUM_FORMAT(400, "잘못된 입력 형식입니다."),
+	INVALID_HTML_FORMAT(400, "HTML 내용이 비어 있습니다."),
+	FILE_SAVE_ERROR(500, "HTML 파일 저장 중 오류가 발생했습니다.");
 
 	private final int status;
 	private final String message;
