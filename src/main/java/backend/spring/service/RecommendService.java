@@ -1,7 +1,6 @@
 package backend.spring.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -10,6 +9,9 @@ import backend.spring.dto.response.RecommendMovieResponseDto;
 import backend.spring.entity.Movie;
 import backend.spring.entity.Visitor;
 import backend.spring.entity.VisitorTag;
+import backend.spring.entity.type.Emotion;
+import backend.spring.entity.type.Genre;
+import backend.spring.entity.type.Style;
 import backend.spring.exception.CustomException;
 import backend.spring.exception.ResponseCode;
 import backend.spring.repository.MovieRepository;
@@ -31,23 +33,28 @@ public class RecommendService {
 		Visitor visitor = visitorRepository.findById(visitorId)
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
-		Set<String> tags = Set.of(
-			request.emotion(),
-			request.style(),
-			request.genre()
+		Emotion emotion = Emotion.from(request.emotion());
+		Style style = Style.from(request.style());
+		Genre genre = Genre.from(request.genre());
+		Genre hate = Genre.from(request.hate());
+
+		List<Movie> recommended = movieRepository.findRecommendedMovies(
+			emotion.name(),
+			style.name(),
+			genre.name(),
+			hate.name()
 		);
 
-		List<Movie> recommended = movieRepository.findRecommendedMovies(tags, request.hate());
 		if (recommended.isEmpty()) {
 			throw new CustomException(ResponseCode.NO_RECOMMENDATION_FOUND);
 		}
 
 		visitorTagRepository.save(VisitorTag.of(
 			visitor,
-			request.emotion(),
-			request.style(),
-			request.genre(),
-			request.hate()
+			emotion,
+			style,
+			genre,
+			hate
 		));
 
 		return recommended.stream()

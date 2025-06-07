@@ -56,13 +56,13 @@ public class VisitorTag {
 		this.hate = hate;
 	}
 
-	public static VisitorTag of(Visitor visitor, String emotion, String style, String genre, String hate) {
-		return new VisitorTag(
-			visitor,
-			Emotion.from(emotion),
-			Style.from(style),
-			Genre.from(genre),
-			Genre.from(hate)
-		);
+	public static VisitorTag of(Visitor visitor, Emotion emotion, Style style, Genre genre, Genre hate) {
+		VisitorTag tag = new VisitorTag();
+		tag.visitor = visitor;
+		tag.emotion = emotion;
+		tag.style = style;
+		tag.genre = genre;
+		tag.hate = hate;
+		return tag;
 	}
 }

@@ -4,6 +4,9 @@ import static backend.spring.exception.ResponseCode.*;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import backend.spring.exception.CustomException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +21,16 @@ public enum Origin {
 
 	private final String name;
 
+	@JsonCreator
 	public static Origin from(String name) {
 		return Arrays.stream(values())
 			.filter(e -> e.name.equals(name))
 			.findFirst()
 			.orElseThrow(() -> new CustomException(INVALID_ENUM_FORMAT));
+	}
+
+	@JsonValue
+	public String getName() {
+		return name;
 	}
 }
