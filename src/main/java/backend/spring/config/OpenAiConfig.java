@@ -18,7 +18,7 @@ public class OpenAiConfig {
 	@Value("${openai.api-url}")
 	private String apiUrl;
 
-	@Bean
+	@Bean("openAiWebClient")
 	public WebClient openAiWebClient() { //gpt api 헤더 설정
 		return WebClient.builder()
 			.baseUrl(apiUrl)
