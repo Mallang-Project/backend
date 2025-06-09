@@ -27,8 +27,6 @@ public class RecommendService {
 	private final MovieRepository movieRepository;
 	private final VisitorTagRepository visitorTagRepository;
 
-	private final String imageBaseUrl = "https://mallang.info/images/";
-
 	public List<RecommendMovieResponseDto> recommendMovies(Long visitorId, RecommendRequest request) {
 		Visitor visitor = visitorRepository.findById(visitorId)
 			.orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
@@ -63,7 +61,7 @@ public class RecommendService {
 				movie.getTitle(),
 				movie.getHour(),
 				movie.getYear(),
-				imageBaseUrl + movie.getImage()
+				movie.getImage()
 			))
 			.toList();
 	}
